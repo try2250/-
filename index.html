@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂伴侣 - Portable Classroom Companion</title>
+    
+    <!-- Core Libraries (CDN) -->
+    <!-- In a fully offline environment, download these js files locally and change src -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#3b82f6', secondary: '#10b981', accent: '#f59e0b', danger: '#ef4444' },
+                    animation: {
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'pop': 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'bounce-in': 'bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        pop: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        bounceIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.3)' },
+                            '50%': { opacity: '1', transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f3f4f6; user-select: none; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .confetti-dot {
+            position: absolute;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            animation: fall 1s ease-out forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-20px) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100px) scale(1); opacity: 0; }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+        // --- 1. Icons (SVG) ---
+        const Icons = {
+            Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+            Users: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+            BookOpen: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+            PlayCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+            BarChart2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+            School: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m4 6 8-4 8 4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M18 5v17"/><path d="M6 5v17"/><circle cx="12" cy="9" r="2"/></svg>,
+            Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+            ChevronDown: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>,
+            Plus: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+            Trash2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>,
+            FileUp: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>,
+            Shuffle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>,
+            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+            X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+            Trophy: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+            Medal: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
+            Award: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>,
+            ArrowRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        };
+
+        // --- 2. Audio Service (Browser Native) ---
+        const AudioService = {
+            ctx: null,
+            getCtx: () => {
+                if (!AudioService.ctx) {
+                    AudioService.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (AudioService.ctx.state === 'suspended') AudioService.ctx.resume();
+                return AudioService.ctx;
+            },
+            playTick: () => {
+                try {
+                    const ctx = AudioService.getCtx();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                } catch(e){}
+            },
+            playSuccess: () => {
+                try {
+                    const ctx = AudioService.getCtx();
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1200, now);
+                    osc.frequency.exponentialRampToValueAtTime(1800, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                    osc.start();
+                    osc.stop(now + 0.8);
+                } catch(e){}
+            },
+            playFailure: () => {
+                try {
+                    const ctx = AudioService.getCtx();
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                    osc.start();
+                    osc.stop(now + 0.3);
+                } catch(e){}
+            },
+            playFanfare: () => {
+                try {
+                    const ctx = AudioService.getCtx();
+                    const now = ctx.currentTime;
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.type = 'triangle';
+                        osc.frequency.value = freq;
+                        const start = now + i * 0.08;
+                        const duration = 0.4;
+                        gain.gain.setValueAtTime(0, start);
+                        gain.gain.linearRampToValueAtTime(0.1, start + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+                        osc.start(start);
+                        osc.stop(start + duration + 0.1);
+                    });
+                } catch(e){}
+            }
+        };
+
+        // --- 3. Constants & Helpers ---
+        const ViewState = { DASHBOARD: 'DASHBOARD', STUDENTS: 'STUDENTS', QUESTIONS: 'QUESTIONS', SESSION: 'SESSION', STATS: 'STATS' };
+        const generateId = () => Math.random().toString(36).substring(2, 9);
+        const STORAGE_KEY = 'classroom_companion_data_v2';
+        
+        const loadState = () => {
+            try {
+                const s = localStorage.getItem(STORAGE_KEY);
+                const defaultState = { classes: [], activeClassId: null, students: [], questions: [] };
+                if (!s) return defaultState;
+                const parsed = JSON.parse(s);
+                return { ...defaultState, ...parsed };
+            } catch (e) { return { classes: [], activeClassId: null, students: [], questions: [] }; }
+        };
+        const saveState = (state) => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+        // --- 4. Components ---
+
+        // >>> Sidebar & Layout
+        const Layout = ({ currentView, setView, children, onExport, classes, activeClassId, setActiveClassId }) => {
+            const activeClassName = classes.find(c => c.id === activeClassId)?.name || '选择班级';
+            const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+            const NavItem = ({ view, label, icon: Icon }) => (
+                <button
+                    onClick={() => setView(view)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${currentView === view ? 'bg-blue-50 text-blue-700 shadow-sm font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+                >
+                    <Icon />
+                    <span>{label}</span>
+                </button>
+            );
+
+            return (
+                <div className="flex h-screen bg-gray-100 font-sans text-gray-900">
+                    <aside className="w-64 bg-white shadow-lg flex flex-col z-10">
+                        <div className="p-6 border-b border-gray-100 flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white"><Icons.BookOpen /></div>
+                            <span className="text-xl font-bold text-gray-800">课堂伴侣</span>
+                        </div>
+                        <div className="px-4 py-4">
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="w-full bg-blue-50 hover:bg-blue-100 text-blue-800 p-3 rounded-xl flex items-center justify-between transition-colors"
+                                >
+                                    <div className="flex items-center truncate">
+                                        <span className="mr-2"><Icons.School /></span>
+                                        <span className="font-semibold text-sm truncate max-w-[110px]">{activeClassName}</span>
+                                    </div>
+                                    <Icons.ChevronDown />
+                                </button>
+                                {isDropdownOpen && (
+                                    <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-20">
+                                        {classes.map(c => (
+                                            <button
+                                                key={c.id}
+                                                onClick={() => { setActiveClassId(c.id); setIsDropdownOpen(false); }}
+                                                className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 flex items-center justify-between ${activeClassId === c.id ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600'}`}
+                                            >
+                                                <span className="truncate">{c.name}</span>
+                                                {activeClassId === c.id && <div className="w-2 h-2 rounded-full bg-blue-500"></div>}
+                                            </button>
+                                        ))}
+                                        <button 
+                                            onClick={() => { setView(ViewState.STUDENTS); setIsDropdownOpen(false); }}
+                                            className="w-full text-left px-4 py-2 bg-gray-50 text-xs text-gray-500 hover:text-blue-600 hover:bg-gray-100 border-t border-gray-100"
+                                        >
+                                            + 管理班级
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <nav className="flex-1 px-4 space-y-2">
+                            <NavItem view={ViewState.DASHBOARD} label="首页" icon={Icons.Home} />
+                            <NavItem view={ViewState.SESSION} label="开始上课" icon={Icons.PlayCircle} />
+                            <NavItem view={ViewState.STUDENTS} label="班级学生" icon={Icons.Users} />
+                            <NavItem view={ViewState.QUESTIONS} label="题库管理" icon={Icons.BookOpen} />
+                            <NavItem view={ViewState.STATS} label="统计排行" icon={Icons.BarChart2} />
+                        </nav>
+                        <div className="p-4 border-t border-gray-100">
+                            <button onClick={onExport} className="w-full flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                <Icons.Download /> <span>备份数据</span>
+                            </button>
+                        </div>
+                    </aside>
+                    <main className="flex-1 overflow-hidden relative flex flex-col">
+                        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm">
+                            <div className="flex items-center space-x-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    {currentView === ViewState.DASHBOARD ? '仪表盘' : 
+                                     currentView === ViewState.SESSION ? '上课模式' :
+                                     currentView === ViewState.STUDENTS ? '学生管理' :
+                                     currentView === ViewState.QUESTIONS ? '题库中心' : '数据统计'}
+                                </h2>
+                                {activeClassId && <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">当前: {activeClassName}</span>}
+                            </div>
+                            <div className="text-sm text-gray-500">Portable Classroom v2.1</div>
+                        </header>
+                        <div className="flex-1 overflow-auto p-8">{children}</div>
+                    </main>
+                </div>
+            );
+        };
+
+        // >>> Student Manager
+        const StudentManager = ({ allStudents, setStudents, classes, setClasses, activeClassId, setActiveClassId }) => {
+            const [newStudentName, setNewStudentName] = useState('');
+            const [newClassName, setNewClassName] = useState('');
+            const fileInputRef = useRef(null);
+            
+            const currentClassStudents = allStudents.filter(s => s.classId === activeClassId);
+
+            const handleAddClass = () => {
+                if (!newClassName.trim()) return;
+                const newClass = { id: generateId(), name: newClassName.trim() };
+                setClasses([...classes, newClass]);
+                setNewClassName('');
+                setActiveClassId(newClass.id);
+            };
+
+            const handleDeleteClass = (id) => {
+                if (classes.length <= 1) return alert("至少保留一个班级");
+                if (confirm('删除班级将清空该班级所有数据，确定吗？')) {
+                    const updatedClasses = classes.filter(c => c.id !== id);
+                    setClasses(updatedClasses);
+                    setStudents(allStudents.filter(s => s.classId !== id));
+                    if (activeClassId === id) setActiveClassId(updatedClasses[0].id);
+                }
+            };
+
+            const handleAddStudent = () => {
+                if (!newStudentName.trim() || !activeClassId) return;
+                setStudents([...allStudents, { id: generateId(), classId: activeClassId, name: newStudentName.trim(), score: 0, history: [] }]);
+                setNewStudentName('');
+            };
+
+            const handleImport = (e) => {
+                const file = e.target.files[0];
+                if (!file || !activeClassId) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const lines = ev.target.result.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+                    const newStudents = lines.map(name => ({ id: generateId(), classId: activeClassId, name: name.replace(/["',]/g, ''), score: 0, history: [] }));
+                    setStudents([...allStudents, ...newStudents]);
+                    alert(`导入 ${newStudents.length} 人`);
+                };
+                reader.readAsText(file);
+                e.target.value = null;
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto space-y-8">
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center"><span className="mr-2 text-indigo-500"><Icons.School/></span> 班级管理</h3>
+                        <div className="flex flex-wrap gap-4 items-center">
+                            {classes.map(c => (
+                                <div key={c.id} onClick={() => setActiveClassId(c.id)} className={`relative group cursor-pointer px-4 py-2 rounded-lg border flex items-center space-x-2 transition ${activeClassId === c.id ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium' : 'bg-white border-gray-200 hover:border-indigo-300'}`}>
+                                    <span>{c.name}</span>
+                                    {activeClassId !== c.id && <button onClick={(e) => { e.stopPropagation(); handleDeleteClass(c.id); }} className="text-gray-300 hover:text-red-500 ml-2"><Icons.Trash2 /></button>}
+                                </div>
+                            ))}
+                            <div className="flex gap-2">
+                                <input type="text" value={newClassName} onChange={e => setNewClassName(e.target.value)} placeholder="新班级..." className="p-2 border border-gray-300 rounded-lg text-sm w-32" />
+                                <button onClick={handleAddClass} className="px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">创建</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div className="flex justify-between items-center mb-6">
+                             <div className="flex gap-2 w-full max-w-md">
+                                <input type="text" value={newStudentName} onChange={e => setNewStudentName(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddStudent()} placeholder="学生姓名..." className="flex-1 p-2 border border-gray-300 rounded-lg" />
+                                <button onClick={handleAddStudent} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">添加</button>
+                             </div>
+                             <div>
+                                <input type="file" ref={fileInputRef} onChange={handleImport} accept=".txt,.csv" className="hidden" />
+                                <button onClick={() => fileInputRef.current?.click()} className="flex items-center space-x-2 text-blue-600 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition"><Icons.FileUp /> <span>导入名单 (TXT/CSV)</span></button>
+                             </div>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            {currentClassStudents.map(s => (
+                                <div key={s.id} className="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center group hover:shadow-md transition">
+                                    <div>
+                                        <div className="font-semibold text-gray-800">{s.name}</div>
+                                        <div className="text-xs text-gray-500">积分: {s.score}</div>
+                                    </div>
+                                    <button onClick={() => setStudents(allStudents.filter(st => st.id !== s.id))} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><Icons.Trash2/></button>
+                                </div>
+                            ))}
+                            {currentClassStudents.length === 0 && <div className="col-span-full text-center py-8 text-gray-400">暂无学生，请添加或导入</div>}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // >>> Question Manager
+        const QuestionManager = ({ questions, setQuestions }) => {
+            const [content, setContent] = useState('');
+            const [difficulty, setDifficulty] = useState('Medium');
+            const fileInputRef = useRef(null);
+
+            const handleAdd = () => {
+                if (!content.trim()) return;
+                setQuestions([...questions, { id: generateId(), content: content.trim(), difficulty, tags: [] }]);
+                setContent('');
+            };
+
+            const handleImport = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const lines = ev.target.result.split(/\r?\n/).filter(l => l.trim().length > 0);
+                    const newQs = lines.map(line => {
+                        const parts = line.split(/[,，]/);
+                        const diffStr = parts[1]?.trim().toLowerCase();
+                        let d = 'Medium';
+                        if (diffStr === 'easy' || diffStr === '简单') d = 'Easy';
+                        if (diffStr === 'hard' || diffStr === '困难') d = 'Hard';
+                        return { id: generateId(), content: parts[0].trim(), difficulty: d, tags: [] };
+                    });
+                    setQuestions([...questions, ...newQs]);
+                    alert(`导入 ${newQs.length} 题`);
+                };
+                reader.readAsText(file);
+                e.target.value = null;
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-6">
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-gray-800 flex items-center"><span className="mr-2 text-blue-500"><Icons.Plus/></span> 添加题目</h3>
+                            <div>
+                                <input type="file" ref={fileInputRef} onChange={handleImport} accept=".txt,.csv" className="hidden" />
+                                <button onClick={() => fileInputRef.current?.click()} className="flex items-center space-x-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-lg border border-green-200 text-sm hover:bg-green-100"><Icons.FileUp /> <span>导入题库</span></button>
+                            </div>
+                        </div>
+                        <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="题目内容..." className="w-full p-3 border border-gray-300 rounded-lg h-24 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        <div className="flex gap-3">
+                            <select value={difficulty} onChange={e => setDifficulty(e.target.value)} className="p-2 border border-gray-300 rounded-lg">
+                                <option value="Easy">简单</option><option value="Medium">中等</option><option value="Hard">困难</option>
+                            </select>
+                            <button onClick={handleAdd} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">保存</button>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="max-h-[500px] overflow-y-auto divide-y divide-gray-100">
+                            {questions.map(q => (
+                                <div key={q.id} className="p-4 flex items-center justify-between hover:bg-gray-50">
+                                    <div className="flex-1">
+                                        <div className="text-gray-800">{q.content}</div>
+                                        <span className={`text-xs px-2 py-0.5 rounded ${q.difficulty === 'Easy' ? 'bg-green-100 text-green-700' : q.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{q.difficulty}</span>
+                                    </div>
+                                    <button onClick={() => setQuestions(questions.filter(qi => qi.id !== q.id))} className="text-gray-300 hover:text-red-500 p-2"><Icons.Trash2/></button>
+                                </div>
+                            ))}
+                            {questions.length === 0 && <div className="p-8 text-center text-gray-400">暂无题目</div>}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // >>> Session Mode
+        const SessionMode = ({ students, questions, onUpdateStudent, activeClass }) => {
+            const [currentStudent, setCurrentStudent] = useState(null);
+            const [currentQuestion, setCurrentQuestion] = useState(null);
+            const [isRolling, setIsRolling] = useState(false);
+            const [showControls, setShowControls] = useState(false);
+            const [feedback, setFeedback] = useState(null);
+
+            const pick = () => {
+                if (students.length === 0) return;
+                setIsRolling(true); setShowControls(false); setFeedback(null); setCurrentQuestion(null);
+                let count = 0;
+                const interval = setInterval(() => {
+                    setCurrentStudent(students[Math.floor(Math.random() * students.length)]);
+                    AudioService.playTick();
+                    count++;
+                    if (count > 20) {
+                        clearInterval(interval);
+                        setIsRolling(false);
+                        AudioService.playFanfare();
+                        if (questions.length > 0) setCurrentQuestion(questions[Math.floor(Math.random() * questions.length)]);
+                        setShowControls(true);
+                    }
+                }, 80);
+            };
+
+            const score = (points) => {
+                if (!currentStudent) return;
+                if (points > 0) AudioService.playSuccess(); else AudioService.playFailure();
+                const updated = { ...currentStudent, score: currentStudent.score + points, history: [...currentStudent.history, { points, timestamp: Date.now() }] };
+                onUpdateStudent(updated);
+                setCurrentStudent(updated);
+                setShowControls(false);
+                setFeedback({ type: points > 0 ? 'success' : 'failure', points });
+            };
+
+            if (!activeClass || students.length === 0) return <div className="h-full flex flex-col items-center justify-center text-gray-400"><Icons.School /><span className="mt-2">请先选择班级并添加学生</span></div>;
+
+            return (
+                <div className="h-full flex flex-col items-center justify-center space-y-8 max-w-4xl mx-auto">
+                    <div className={`relative w-full max-w-lg aspect-video bg-white rounded-3xl shadow-2xl flex flex-col items-center justify-center p-8 transition-all border-4 ${isRolling ? 'scale-95 border-blue-200' : 'scale-100 border-blue-500'} ${feedback?.type === 'failure' ? 'animate-shake border-red-400' : ''} ${feedback?.type === 'success' ? 'border-green-400' : ''}`}>
+                        {!currentStudent ? (
+                            <div className="text-gray-400 flex flex-col items-center"><Icons.Trophy /><span className="text-2xl mt-4">准备提问</span><span className="bg-gray-100 px-3 py-1 rounded-full text-sm mt-2">{activeClass.name}</span></div>
+                        ) : (
+                            <>
+                                <div className="text-8xl font-black text-gray-800 tracking-tight mb-4 text-center">{currentStudent.name}</div>
+                                <div className="text-2xl text-blue-600 font-medium bg-blue-50 px-6 py-2 rounded-full">积分: {currentStudent.score}</div>
+                            </>
+                        )}
+                        {feedback && (
+                            <div className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-col z-20 animate-pop">
+                                <div className={`text-6xl font-bold mb-4 ${feedback.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>{feedback.points > 0 ? `+${feedback.points}` : feedback.points}</div>
+                                <div className="text-xl font-medium">{feedback.type === 'success' ? '回答正确！' : '继续加油！'}</div>
+                                {feedback.type === 'success' && <>
+                                    <div className="confetti-dot bg-red-400 left-1/4 top-1/4" style={{animationDelay: '0s'}}></div>
+                                    <div className="confetti-dot bg-blue-400 left-2/3 top-1/3" style={{animationDelay: '0.1s'}}></div>
+                                    <div className="confetti-dot bg-yellow-400 left-1/2 top-1/2" style={{animationDelay: '0.2s'}}></div>
+                                </>}
+                            </div>
+                        )}
+                    </div>
+                    {currentQuestion && !isRolling && !feedback && (
+                        <div className="w-full max-w-2xl bg-indigo-50 border border-indigo-100 p-6 rounded-xl animate-bounce-in shadow-md text-center">
+                            <span className="text-xs font-bold uppercase tracking-wider bg-indigo-200 text-indigo-800 px-2 py-1 rounded mb-2 inline-block">{currentQuestion.difficulty}</span>
+                            <p className="text-2xl text-indigo-900 font-medium">{currentQuestion.content}</p>
+                        </div>
+                    )}
+                    <div className="flex items-center gap-6">
+                        {!showControls ? (
+                            <button onClick={pick} disabled={isRolling} className={`flex items-center space-x-3 px-10 py-5 rounded-2xl text-2xl font-bold shadow-lg transition-transform active:scale-95 ${isRolling ? 'bg-gray-200 text-gray-400' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+                                <Icons.Shuffle /> <span>{isRolling ? '抽取中...' : '随机抽查'}</span>
+                            </button>
+                        ) : (
+                            <>
+                                <button onClick={() => score(0)} className="p-4 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-gray-600">跳过</button>
+                                <button onClick={() => score(-1)} className="w-24 h-24 rounded-2xl bg-red-50 text-red-600 border-2 border-red-100 hover:bg-red-100 flex flex-col items-center justify-center font-bold text-lg"><Icons.X /><span className="mt-1">-1</span></button>
+                                <button onClick={() => score(1)} className="w-24 h-24 rounded-2xl bg-green-50 text-green-600 border-2 border-green-100 hover:bg-green-100 flex flex-col items-center justify-center font-bold text-lg"><Icons.Check /><span className="mt-1">+1</span></button>
+                                <button onClick={() => score(2)} className="w-24 h-24 rounded-2xl bg-emerald-50 text-emerald-600 border-2 border-emerald-100 hover:bg-emerald-100 flex flex-col items-center justify-center font-bold text-lg"><div className="flex"><Icons.Check/><Icons.Check/></div><span className="mt-1">+2</span></button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // >>> Statistics (CSS-only Chart for portability)
+        const Statistics = ({ students, activeClass }) => {
+            if (!activeClass || students.length === 0) return <div className="text-center text-gray-400 mt-20">暂无数据</div>;
+            const sorted = [...students].sort((a, b) => b.score - a.score);
+            const top3 = sorted.slice(0, 3);
+            const maxScore = Math.max(...sorted.map(s => s.score), 1);
+            
+            return (
+                <div className="space-y-8 max-w-5xl mx-auto">
+                    <h2 className="text-xl font-bold text-gray-800">{activeClass.name} - 排行榜</h2>
+                    {/* Podium */}
+                    <div className="flex justify-center items-end gap-4 mb-12 h-64">
+                        {top3[1] && <div className="flex flex-col items-center w-32"><div className="mb-2 font-bold text-gray-700">{top3[1].name}</div><div className="w-full bg-gray-200 rounded-t-lg flex items-end justify-center pb-4 text-gray-500 font-bold h-32 relative"><Icons.Medal className="absolute -top-6 text-gray-400 w-10 h-10"/>{top3[1].score}</div><div className="mt-2 font-bold text-gray-400">NO.2</div></div>}
+                        {top3[0] && <div className="flex flex-col items-center w-36"><div className="mb-2 font-bold text-gray-800 text-xl">{top3[0].name}</div><div className="w-full bg-yellow-100 rounded-t-lg flex items-end justify-center pb-4 text-yellow-600 font-bold h-48 relative border-t-4 border-yellow-300"><Icons.Trophy className="absolute -top-8 text-yellow-500 w-14 h-14"/>{top3[0].score}</div><div className="mt-2 font-bold text-yellow-500 text-lg">NO.1</div></div>}
+                        {top3[2] && <div className="flex flex-col items-center w-32"><div className="mb-2 font-bold text-gray-700">{top3[2].name}</div><div className="w-full bg-orange-50 rounded-t-lg flex items-end justify-center pb-4 text-orange-600 font-bold h-24 relative"><Icons.Award className="absolute -top-6 text-orange-400 w-10 h-10"/>{top3[2].score}</div><div className="mt-2 font-bold text-orange-400">NO.3</div></div>}
+                    </div>
+                    {/* List Chart */}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        {sorted.slice(0, 10).map((s, i) => (
+                            <div key={s.id} className="flex items-center gap-4 mb-3">
+                                <div className="w-6 text-gray-400 font-mono text-right">{i + 1}</div>
+                                <div className="w-20 font-medium text-gray-700 truncate">{s.name}</div>
+                                <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-500 rounded-full" style={{width: `${(s.score / maxScore) * 100}%`}}></div>
+                                </div>
+                                <div className="w-12 text-right text-gray-600 font-bold">{s.score}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // >>> Dashboard
+        const Dashboard = ({ state, setView, activeClass }) => {
+            const count = state.students.filter(s => s.classId === activeClass?.id).length;
+            const Card = ({ title, sub, icon: Icon, color, onClick, val }) => (
+                <div onClick={onClick} className={`bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition cursor-pointer group`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${color} bg-opacity-10 text-${color.split('-')[1]}-600`}>
+                        <Icon />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-1">{title}</h3>
+                    <p className="text-gray-500 mb-4 text-sm">{sub}</p>
+                    <div className="text-3xl font-black text-gray-900">{val}</div>
+                </div>
+            );
+            return (
+                <div className="max-w-6xl mx-auto">
+                    <div className="mb-12"><h1 className="text-4xl font-extrabold text-gray-900 mb-2">欢迎回来, 老师</h1><p className="text-gray-500 text-lg">当前班级: <span className="font-bold text-blue-600">{activeClass?.name || "请选择"}</span></p></div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div onClick={() => setView(ViewState.SESSION)} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-8 text-white shadow-lg hover:shadow-2xl hover:scale-105 transition cursor-pointer relative overflow-hidden">
+                            <div className="relative z-10"><div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-6"><Icons.PlayCircle /></div><h3 className="text-2xl font-bold mb-2">快速开始</h3><p className="text-blue-100 mb-8">进入随机抽查与积分模式</p><div className="flex items-center font-bold">立即进入 <Icons.ArrowRight /></div></div>
+                        </div>
+                        <Card title="班级学生" sub="当前班级人数" icon={Icons.School} color="bg-emerald-500" onClick={() => setView(ViewState.STUDENTS)} val={`${count} 人`} />
+                        <Card title="公共题库" sub="全校共享题目" icon={Icons.BookOpen} color="bg-purple-500" onClick={() => setView(ViewState.QUESTIONS)} val={`${state.questions.length} 题`} />
+                    </div>
+                </div>
+            );
+        };
+
+        // --- 5. Main App ---
+        const App = () => {
+            const [state, setState] = useState({ classes: [], activeClassId: null, students: [], questions: [] });
+            const [view, setView] = useState(ViewState.DASHBOARD);
+            const [loaded, setLoaded] = useState(false);
+
+            useEffect(() => {
+                const s = loadState();
+                if (s.classes.length === 0) {
+                    const defId = generateId();
+                    s.classes = [{ id: defId, name: '默认班级' }];
+                    s.activeClassId = defId;
+                    s.students = s.students.map(st => ({...st, classId: defId}));
+                }
+                setState(s);
+                setLoaded(true);
+            }, []);
+
+            useEffect(() => { if (loaded) saveState(state); }, [state, loaded]);
+
+            const exportData = () => {
+                const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            };
+
+            if (!loaded) return null;
+            const activeClass = state.classes.find(c => c.id === state.activeClassId);
+
+            return (
+                <Layout 
+                    currentView={view} setView={setView} onExport={exportData}
+                    classes={state.classes} activeClassId={state.activeClassId} 
+                    setActiveClassId={id => setState(p => ({...p, activeClassId: id}))}
+                >
+                    {view === ViewState.DASHBOARD && <Dashboard state={state} setView={setView} activeClass={activeClass} />}
+                    {view === ViewState.STUDENTS && <StudentManager allStudents={state.students} setStudents={s => setState(p => ({...p, students: s}))} classes={state.classes} setClasses={c => setState(p => ({...p, classes: c}))} activeClassId={state.activeClassId} setActiveClassId={id => setState(p => ({...p, activeClassId: id}))} />}
+                    {view === ViewState.QUESTIONS && <QuestionManager questions={state.questions} setQuestions={q => setState(p => ({...p, questions: q}))} />}
+                    {view === ViewState.SESSION && <SessionMode students={state.students.filter(s => s.classId === state.activeClassId)} questions={state.questions} onUpdateStudent={u => setState(p => ({...p, students: p.students.map(s => s.id === u.id ? u : s)}))} activeClass={activeClass} />}
+                    {view === ViewState.STATS && <Statistics students={state.students.filter(s => s.classId === state.activeClassId)} activeClass={activeClass} />}
+                </Layout>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
