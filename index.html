@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -66,12 +67,12 @@
 <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1"
   }
 }
 </script>
@@ -109,7 +110,14 @@
             FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
             AlertCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
             Save: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
-            FileJson: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 13a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 13a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1 1 1 0 0 0-1 1v1a1 1 0 0 1-1 1"/></svg>
+            FileJson: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 13a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"/><path d="M14 13a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1 1 1 0 0 0-1 1v1a1 1 0 0 1-1 1"/></svg>,
+            Briefcase: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+            Clock: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+            Grid: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>,
+            Maximize: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>,
+            Database: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>,
+            History: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/><path d="M3 3v9h9"/><path d="M12 7v5l4 2"/></svg>,
+            FolderOpen: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
         };
 
         // --- 2. Audio Service (Browser Native) ---
@@ -190,13 +198,34 @@
                         osc.stop(start + duration + 0.1);
                     });
                 } catch(e){}
+            },
+            playAlarm: () => {
+                try {
+                    const ctx = AudioService.getCtx();
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(880, now);
+                    osc.frequency.setValueAtTime(880, now + 0.2);
+                    osc.frequency.setValueAtTime(0, now + 0.21);
+                    osc.frequency.setValueAtTime(880, now + 0.4);
+                    
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 1);
+                    osc.start();
+                    osc.stop(now + 1);
+                } catch(e){}
             }
         };
 
         // --- 3. Constants & Helpers ---
-        const ViewState = { DASHBOARD: 'DASHBOARD', STUDENTS: 'STUDENTS', QUESTIONS: 'QUESTIONS', SESSION: 'SESSION', STATS: 'STATS' };
+        const ViewState = { DASHBOARD: 'DASHBOARD', STUDENTS: 'STUDENTS', QUESTIONS: 'QUESTIONS', SESSION: 'SESSION', STATS: 'STATS', TOOLS: 'TOOLS', DATA: 'DATA' };
         const generateId = () => Math.random().toString(36).substring(2, 9);
         const STORAGE_KEY = 'classroom_companion_data_v2';
+        const SNAPSHOT_KEY = 'classroom_companion_snapshots_v2';
         
         const loadState = () => {
             try {
@@ -209,16 +238,45 @@
         };
         const saveState = (state) => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
+        // Snapshot Manager
+        const SnapshotManager = {
+            get: () => {
+                try {
+                    return JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
+                } catch { return []; }
+            },
+            add: (state) => {
+                const list = SnapshotManager.get();
+                const snapshot = {
+                    timestamp: Date.now(),
+                    label: `自动备份 (${new Date().toLocaleTimeString()})`,
+                    state: JSON.stringify(state),
+                    size: state.students.length
+                };
+                // Keep last 5 snapshots
+                const updated = [snapshot, ...list].slice(0, 5);
+                localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(updated));
+            }
+        };
+
         // --- 4. Components ---
 
         // >>> Sidebar & Layout
-        const Layout = ({ currentView, setView, children, onExport, onImport, classes, activeClassId, setActiveClassId }) => {
+        const Layout = ({ currentView, setView, children, classes, activeClassId, setActiveClassId }) => {
             const activeClassName = classes.find(c => c.id === activeClassId)?.name || '选择班级';
             const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-            const importFileRef = useRef(null);
+            const [isFullscreen, setIsFullscreen] = useState(false);
 
-            const handleImportClick = () => {
-                importFileRef.current?.click();
+            const toggleFullscreen = () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    setIsFullscreen(true);
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                        setIsFullscreen(false);
+                    }
+                }
             };
 
             const NavItem = ({ view, label, icon: Icon }) => (
@@ -233,7 +291,7 @@
 
             return (
                 <div className="flex h-screen bg-gray-100 font-sans text-gray-900">
-                    <aside className="w-64 bg-white shadow-lg flex flex-col z-10 flex-shrink-0">
+                    <aside className={`w-64 bg-white shadow-lg flex flex-col z-10 flex-shrink-0 transition-all duration-300 ${isFullscreen ? '-ml-64' : ''}`}>
                         <div className="p-6 border-b border-gray-100 flex items-center space-x-2">
                             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white"><Icons.BookOpen /></div>
                             <span className="text-xl font-bold text-gray-800">课堂伴侣</span>
@@ -275,35 +333,181 @@
                         <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
                             <NavItem view={ViewState.DASHBOARD} label="首页" icon={Icons.Home} />
                             <NavItem view={ViewState.SESSION} label="开始上课" icon={Icons.PlayCircle} />
+                            <NavItem view={ViewState.TOOLS} label="课堂工具箱" icon={Icons.Briefcase} />
                             <NavItem view={ViewState.STUDENTS} label="班级学生" icon={Icons.Users} />
                             <NavItem view={ViewState.QUESTIONS} label="题库管理" icon={Icons.BookOpen} />
                             <NavItem view={ViewState.STATS} label="统计排行" icon={Icons.BarChart2} />
                         </nav>
                         <div className="p-4 border-t border-gray-100 space-y-2">
-                            <button onClick={onExport} className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors shadow-sm">
-                                <Icons.Download /> <span>备份所有数据</span>
-                            </button>
-                            <input type="file" ref={importFileRef} onChange={onImport} accept=".json" className="hidden" />
-                            <button onClick={handleImportClick} className="w-full flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                <Icons.Upload /> <span>恢复 / 导入班级</span>
+                             <button onClick={() => setView(ViewState.DATA)} className={`w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg text-sm transition-colors shadow-sm font-medium ${currentView === ViewState.DATA ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700'}`}>
+                                <Icons.Database /> <span>数据中心</span>
                             </button>
                         </div>
                     </aside>
                     <main className="flex-1 overflow-hidden relative flex flex-col">
                         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm">
                             <div className="flex items-center space-x-4">
+                                <button onClick={toggleFullscreen} className="text-gray-500 hover:text-blue-600 transition p-2 hover:bg-gray-100 rounded-lg" title={isFullscreen ? "退出全屏" : "全屏模式 (大屏投影)"}>
+                                    <Icons.Maximize />
+                                </button>
                                 <h2 className="text-lg font-semibold text-gray-800">
                                     {currentView === ViewState.DASHBOARD ? '仪表盘' : 
                                      currentView === ViewState.SESSION ? '上课模式' :
+                                     currentView === ViewState.TOOLS ? '课堂工具箱' :
                                      currentView === ViewState.STUDENTS ? '学生管理' :
-                                     currentView === ViewState.QUESTIONS ? '题库中心' : '数据统计'}
+                                     currentView === ViewState.QUESTIONS ? '题库中心' : 
+                                     currentView === ViewState.DATA ? '数据备份与恢复' : '数据统计'}
                                 </h2>
                                 {activeClassId && <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">当前: {activeClassName}</span>}
                             </div>
-                            <div className="text-sm text-gray-500">Portable Classroom v2.3</div>
+                            <div className="text-sm text-gray-500 hidden md:block">Portable Classroom v2.5</div>
                         </header>
                         <div className="flex-1 overflow-auto p-8">{children}</div>
                     </main>
+                </div>
+            );
+        };
+
+        // >>> Data Management Center (NEW)
+        const DataCenter = ({ state, setState, activeClassId }) => {
+            const [snapshots, setSnapshots] = useState(SnapshotManager.get());
+            const fileInputRef = useRef(null);
+
+            const handleSmartBackup = async () => {
+                const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+                const fileName = `课堂伴侣_备份_${new Date().toISOString().slice(0,10)}.json`;
+
+                // Try File System Access API
+                if (window.showSaveFilePicker) {
+                    try {
+                        const handle = await window.showSaveFilePicker({
+                            suggestedName: fileName,
+                            types: [{
+                                description: 'JSON Database',
+                                accept: { 'application/json': ['.json'] },
+                            }],
+                        });
+                        const writable = await handle.createWritable();
+                        await writable.write(blob);
+                        await writable.close();
+                        alert("✅ 备份已成功保存到指定位置！");
+                        return;
+                    } catch (err) {
+                        if (err.name !== 'AbortError') console.error(err);
+                        // Fallback to regular download if user cancels or error
+                        // But if AbortError (User Cancelled), we do nothing.
+                        if (err.name === 'AbortError') return;
+                    }
+                }
+                
+                // Fallback for non-supported browsers
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = fileName;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            };
+
+            const handleRestore = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if(confirm("确定要恢复此备份吗？当前数据将被覆盖。")) {
+                            setState(data);
+                            alert("恢复成功！");
+                        }
+                    } catch (err) { alert("文件格式错误"); }
+                };
+                reader.readAsText(file);
+                e.target.value = null;
+            };
+
+            const restoreSnapshot = (snap) => {
+                if(confirm(`确定要回滚到时间点 [${new Date(snap.timestamp).toLocaleString()}] 吗？`)) {
+                    setState(JSON.parse(snap.state));
+                    alert("已回滚到快照状态");
+                }
+            };
+
+            return (
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl p-8 text-white shadow-lg">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <h2 className="text-3xl font-bold mb-2">数据中心</h2>
+                                <p className="text-indigo-100 opacity-90 max-w-xl">
+                                    虽然浏览器限制了自动访问本地硬盘，但我们为您提供了智能的备份方案。
+                                    建议定期点击“另存为备份”将数据保存到 U 盘或电脑安全目录。
+                                </p>
+                            </div>
+                            <div className="bg-white/20 p-4 rounded-2xl">
+                                <Icons.Database />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* File System Operations */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                                <span className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3"><Icons.FolderOpen /></span>
+                                手动备份与恢复
+                            </h3>
+                            <div className="space-y-4">
+                                <button onClick={handleSmartBackup} className="w-full flex items-center justify-between p-4 bg-blue-50 border border-blue-100 rounded-xl hover:bg-blue-100 transition group">
+                                    <div className="flex items-center">
+                                        <div className="bg-blue-600 text-white p-2 rounded-lg mr-4 group-hover:scale-110 transition-transform"><Icons.Save /></div>
+                                        <div className="text-left">
+                                            <div className="font-bold text-blue-900">另存为备份文件 (推荐)</div>
+                                            <div className="text-xs text-blue-600">手动选择保存位置，如 U 盘</div>
+                                        </div>
+                                    </div>
+                                    <Icons.ArrowRight className="text-blue-300" />
+                                </button>
+                                
+                                <div className="relative">
+                                    <input type="file" ref={fileInputRef} onChange={handleRestore} accept=".json" className="hidden" />
+                                    <button onClick={() => fileInputRef.current?.click()} className="w-full flex items-center justify-between p-4 bg-green-50 border border-green-100 rounded-xl hover:bg-green-100 transition group">
+                                        <div className="flex items-center">
+                                            <div className="bg-green-600 text-white p-2 rounded-lg mr-4 group-hover:scale-110 transition-transform"><Icons.Upload /></div>
+                                            <div className="text-left">
+                                                <div className="font-bold text-green-900">恢复 / 导入数据</div>
+                                                <div className="text-xs text-green-600">从之前的备份文件恢复所有数据</div>
+                                            </div>
+                                        </div>
+                                        <Icons.ArrowRight className="text-green-300" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Internal Snapshots */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                                <span className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3"><Icons.History /></span>
+                                内置自动快照 (最近5次)
+                            </h3>
+                            <div className="space-y-3">
+                                {snapshots.length === 0 && <div className="text-gray-400 text-center py-8">暂无自动快照，进行操作后会自动生成</div>}
+                                {snapshots.map((snap, i) => (
+                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50">
+                                        <div>
+                                            <div className="font-medium text-gray-700">{new Date(snap.timestamp).toLocaleString()}</div>
+                                            <div className="text-xs text-gray-400">包含 {snap.size} 名学生数据</div>
+                                        </div>
+                                        <button onClick={() => restoreSnapshot(snap)} className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-orange-500 hover:text-white transition">
+                                            回滚
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 text-xs text-gray-400 border-t border-gray-100 pt-2">
+                                * 快照存储在浏览器缓存中，清除浏览器缓存会丢失快照，请定期使用左侧的“另存为备份文件”。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         };
@@ -362,7 +566,6 @@
                     alert("当前班级没有学生数据可导出");
                     return;
                 }
-                // Add UTF-8 BOM for Excel compatibility
                 const BOM = "\uFEFF"; 
                 const headers = ["班级", "姓名", "当前积分", "历史记录条数"];
                 const rows = currentClassStudents.map(s => [
@@ -371,7 +574,6 @@
                     s.score,
                     s.history.length
                 ]);
-                
                 const csvContent = BOM + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
@@ -383,7 +585,7 @@
                 document.body.removeChild(link);
             };
 
-            const handleExportClassJSON = () => {
+            const handleExportClassJSON = async () => {
                 if (!activeClassId) return;
                 const activeClass = classes.find(c => c.id === activeClassId);
                 const exportData = {
@@ -395,13 +597,27 @@
                 };
                 
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const fileName = `${activeClass.name}_数据包_${new Date().toISOString().slice(0,10)}.json`;
+
+                // Smart Save As
+                if (window.showSaveFilePicker) {
+                    try {
+                        const handle = await window.showSaveFilePicker({
+                            suggestedName: fileName,
+                            types: [{ description: 'JSON Data', accept: { 'application/json': ['.json'] } }],
+                        });
+                        const writable = await handle.createWritable();
+                        await writable.write(blob);
+                        await writable.close();
+                        alert("数据包已保存");
+                        return;
+                    } catch (e) { if(e.name === 'AbortError') return; }
+                }
+
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = `${activeClass.name}_数据包_${new Date().toISOString().slice(0,10)}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                a.href = url; a.download = fileName;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
             };
 
             // Score Management
@@ -616,7 +832,7 @@
             );
         };
 
-        // >>> Session Mode
+        // >>> Session Mode (Active Class)
         const SessionMode = ({ students, questions, onUpdateStudent, activeClass }) => {
             const [currentStudent, setCurrentStudent] = useState(null);
             const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -624,7 +840,7 @@
             const [showControls, setShowControls] = useState(false);
             const [feedback, setFeedback] = useState(null);
 
-            const pick = () => {
+            const pick = useCallback(() => {
                 if (students.length === 0) return;
                 setIsRolling(true); setShowControls(false); setFeedback(null); setCurrentQuestion(null);
                 let count = 0;
@@ -640,9 +856,9 @@
                         setShowControls(true);
                     }
                 }, 80);
-            };
+            }, [students, questions]);
 
-            const score = (points) => {
+            const score = useCallback((points) => {
                 if (!currentStudent) return;
                 if (points > 0) AudioService.playSuccess(); else AudioService.playFailure();
                 const updated = { ...currentStudent, score: currentStudent.score + points, history: [...currentStudent.history, { points, timestamp: Date.now() }] };
@@ -650,7 +866,21 @@
                 setCurrentStudent(updated);
                 setShowControls(false);
                 setFeedback({ type: points > 0 ? 'success' : 'failure', points });
-            };
+            }, [currentStudent, onUpdateStudent]);
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        if (!isRolling && !showControls) pick();
+                    }
+                    if (e.code === 'Enter' && showControls) {
+                        score(0); // Quick skip
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [isRolling, showControls, pick, score]);
 
             if (!activeClass || students.length === 0) return <div className="h-full flex flex-col items-center justify-center text-gray-400"><Icons.School /><span className="mt-2">请先选择班级并添加学生</span></div>;
 
@@ -658,7 +888,11 @@
                 <div className="h-full flex flex-col items-center justify-center space-y-8 max-w-4xl mx-auto">
                     <div className={`relative w-full max-w-lg aspect-video bg-white rounded-3xl shadow-2xl flex flex-col items-center justify-center p-8 transition-all border-4 ${isRolling ? 'scale-95 border-blue-200' : 'scale-100 border-blue-500'} ${feedback?.type === 'failure' ? 'animate-shake border-red-400' : ''} ${feedback?.type === 'success' ? 'border-green-400' : ''}`}>
                         {!currentStudent ? (
-                            <div className="text-gray-400 flex flex-col items-center"><Icons.Trophy /><span className="text-2xl mt-4">准备提问</span><span className="bg-gray-100 px-3 py-1 rounded-full text-sm mt-2">{activeClass.name}</span></div>
+                            <div className="text-gray-400 flex flex-col items-center">
+                                <Icons.Trophy /><span className="text-2xl mt-4">准备提问</span>
+                                <span className="bg-gray-100 px-3 py-1 rounded-full text-sm mt-2">{activeClass.name}</span>
+                                <span className="text-xs text-gray-300 mt-4">(按空格键开始)</span>
+                            </div>
                         ) : (
                             <>
                                 <div className="text-8xl font-black text-gray-800 tracking-tight mb-4 text-center">{currentStudent.name}</div>
@@ -696,6 +930,108 @@
                                 <button onClick={() => score(2)} className="w-24 h-24 rounded-2xl bg-emerald-50 text-emerald-600 border-2 border-emerald-100 hover:bg-emerald-100 flex flex-col items-center justify-center font-bold text-lg"><div className="flex"><Icons.Check/><Icons.Check/></div><span className="mt-1">+2</span></button>
                             </>
                         )}
+                    </div>
+                </div>
+            );
+        };
+
+        // >>> Utility Toolkit (New)
+        const UtilityToolkit = ({ students, activeClass }) => {
+            const [activeTool, setActiveTool] = useState(null); // 'TIMER', 'GROUPS'
+            
+            // Timer State
+            const [timeLeft, setTimeLeft] = useState(0);
+            const [isRunning, setIsRunning] = useState(false);
+            const timerRef = useRef(null);
+
+            // Group State
+            const [groupCount, setGroupCount] = useState(4);
+            const [groups, setGroups] = useState([]);
+
+            useEffect(() => {
+                if (isRunning && timeLeft > 0) {
+                    timerRef.current = setInterval(() => {
+                        setTimeLeft(t => {
+                            if (t <= 1) {
+                                AudioService.playAlarm();
+                                setIsRunning(false);
+                                return 0;
+                            }
+                            return t - 1;
+                        });
+                    }, 1000);
+                } else {
+                    clearInterval(timerRef.current);
+                }
+                return () => clearInterval(timerRef.current);
+            }, [isRunning, timeLeft]);
+
+            const startTimer = (min) => { setTimeLeft(min * 60); setIsRunning(true); };
+            const toggleTimer = () => setIsRunning(!isRunning);
+            const formatTime = (sec) => `${Math.floor(sec / 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`;
+
+            const generateGroups = () => {
+                if(students.length === 0) return;
+                const shuffled = [...students].sort(() => 0.5 - Math.random());
+                const res = Array.from({ length: groupCount }, () => []);
+                shuffled.forEach((s, i) => res[i % groupCount].push(s));
+                setGroups(res);
+            };
+
+            if (!activeClass || students.length === 0) return <div className="text-center text-gray-400 mt-20">请先选择班级并添加学生</div>;
+
+            return (
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center"><Icons.Briefcase className="mr-2"/> 课堂工具箱 ({activeClass.name})</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Tool 1: Timer */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                            <div className="flex items-center mb-6">
+                                <div className="p-3 bg-blue-100 text-blue-600 rounded-lg mr-4"><Icons.Clock /></div>
+                                <h3 className="text-xl font-bold">倒计时 / 计时器</h3>
+                            </div>
+                            <div className="text-center py-8">
+                                <div className={`text-7xl font-mono font-bold mb-8 ${timeLeft < 10 && timeLeft > 0 ? 'text-red-500 animate-pulse' : 'text-gray-800'}`}>
+                                    {formatTime(timeLeft)}
+                                </div>
+                                <div className="flex justify-center gap-3 mb-6">
+                                    {[1, 3, 5, 10].map(m => (
+                                        <button key={m} onClick={() => startTimer(m)} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium">{m}分钟</button>
+                                    ))}
+                                </div>
+                                <div className="flex justify-center gap-4">
+                                    <button onClick={toggleTimer} className={`px-8 py-3 rounded-xl text-white font-bold text-lg ${isRunning ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700'}`}>
+                                        {isRunning ? '暂停' : timeLeft > 0 ? '继续' : '开始'}
+                                    </button>
+                                    <button onClick={() => { setIsRunning(false); setTimeLeft(0); }} className="px-6 py-3 bg-gray-200 text-gray-600 rounded-xl font-bold hover:bg-gray-300">重置</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tool 2: Group Generator */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                            <div className="flex items-center mb-6">
+                                <div className="p-3 bg-purple-100 text-purple-600 rounded-lg mr-4"><Icons.Grid /></div>
+                                <h3 className="text-xl font-bold">随机分组</h3>
+                            </div>
+                            <div className="flex items-center gap-4 mb-6">
+                                <span>将 {students.length} 名学生分成</span>
+                                <input type="number" min="2" max="12" value={groupCount} onChange={e => setGroupCount(parseInt(e.target.value))} className="w-16 p-2 border rounded-lg text-center" />
+                                <span>组</span>
+                                <button onClick={generateGroups} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium">开始分组</button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                                {groups.map((g, i) => (
+                                    <div key={i} className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                        <div className="font-bold text-purple-700 text-sm mb-2">第 {i+1} 组 ({g.length}人)</div>
+                                        <div className="flex flex-wrap gap-1">
+                                            {g.map(s => <span key={s.id} className="text-xs bg-white border border-gray-200 px-2 py-1 rounded text-gray-600">{s.name}</span>)}
+                                        </div>
+                                    </div>
+                                ))}
+                                {groups.length === 0 && <div className="col-span-2 text-center text-gray-400 py-8">点击按钮生成分组方案</div>}
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -750,18 +1086,13 @@
             return (
                 <div className="max-w-6xl mx-auto space-y-8">
                     {/* Data Persistence Warning/Help */}
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg flex items-start shadow-sm">
-                        <Icons.AlertCircle className="w-6 h-6 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
+                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg flex items-start shadow-sm">
+                        <Icons.Database className="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-0.5" />
                         <div>
-                            <h4 className="font-bold text-yellow-800">数据同步与迁移说明</h4>
-                            <p className="text-sm text-yellow-700 mt-1">
-                                <strong>多设备数据同步：</strong> 为了在不同教室/设备间同步特定班级的数据，请使用 <span className="font-bold underline">“导出本班数据包”</span>（在学生管理页面）。
-                                <br/>
-                                <ul className="list-disc list-inside mt-1 ml-1 text-yellow-800/80">
-                                    <li><strong>场景 A:</strong> 在办公室备好名单，导出该班数据包，到教室电脑点击“恢复/导入”即可同步该班级名单。</li>
-                                    <li><strong>场景 B:</strong> 在教室上完课积分变化后，导出该班数据包，回办公室导入，即可同步最新积分。</li>
-                                </ul>
-                                <span className="text-xs mt-2 block opacity-75">* 左侧边栏的“备份所有数据”适用于全量备份，会覆盖所有班级数据，请谨慎使用。</span>
+                            <h4 className="font-bold text-blue-800">数据管理提示</h4>
+                            <p className="text-sm text-blue-700 mt-1">
+                                本地数据已启用 <strong>自动快照保护</strong>。如需将数据带到其他设备，
+                                请前往 <button onClick={()=>setView(ViewState.DATA)} className="underline font-bold">数据中心</button> 使用“另存为备份”功能。
                             </p>
                         </div>
                     </div>
@@ -774,6 +1105,7 @@
                         </div>
                         <Card title="班级学生" sub="当前班级人数" icon={Icons.School} color="bg-emerald-500" onClick={() => setView(ViewState.STUDENTS)} val={`${count} 人`} />
                         <Card title="公共题库" sub="全校共享题目" icon={Icons.BookOpen} color="bg-purple-500" onClick={() => setView(ViewState.QUESTIONS)} val={`${state.questions.length} 题`} />
+                        <Card title="课堂工具箱" sub="分组 / 倒计时" icon={Icons.Briefcase} color="bg-orange-500" onClick={() => setView(ViewState.TOOLS)} val="常用工具" />
                     </div>
                 </div>
             );
@@ -797,7 +1129,31 @@
                 setLoaded(true);
             }, []);
 
-            useEffect(() => { if (loaded) saveState(state); }, [state, loaded]);
+            useEffect(() => { 
+                if (loaded) {
+                    saveState(state);
+                    // Debounced Snapshot logic could go here, but for simplicity we do it on load/major changes or manually
+                    // For now, let's just save snapshot occasionally or when important views change
+                }
+            }, [state, loaded]);
+
+            // Save snapshot every 5 minutes or on demand
+            useEffect(() => {
+                if(!loaded) return;
+                const timer = setInterval(() => {
+                    SnapshotManager.add(state);
+                }, 5 * 60 * 1000); // 5 min
+                return () => clearInterval(timer);
+            }, [loaded, state]);
+            
+            // Also save snapshot when unmounting or leaving? Hard to detect in SPA file
+            // Let's add snapshot on critical updates manually if needed, or rely on interval.
+            // A simple "Save Snapshot" effect on students length change:
+            useEffect(() => {
+                if(loaded && state.students.length > 0) {
+                     SnapshotManager.add(state);
+                }
+            }, [state.students.length, state.classes.length]); // Only significant structural changes
 
             const exportDataJSON = () => {
                 const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
@@ -814,56 +1170,42 @@
                 reader.onload = (ev) => {
                     try {
                         const importedData = JSON.parse(ev.target.result);
-                        
-                        // Check if this is a Single Class Export
                         if (importedData.type === 'SINGLE_CLASS_EXPORT') {
                             const { classInfo, students: newClassStudents } = importedData;
-                            
-                            // Ask user for confirmation
                             if (!confirm(`检测到班级数据包: "${classInfo.name}"。\n\n是否导入并更新此班级的数据？\n(其他班级数据不会受到影响)`)) {
                                 e.target.value = null;
                                 return;
                             }
-
-                            // 1. Update or Add Class Info
                             let updatedClasses = [...state.classes];
                             const existingClassIndex = updatedClasses.findIndex(c => c.id === classInfo.id);
-                            
                             if (existingClassIndex >= 0) {
-                                // Update existing class name if changed
                                 updatedClasses[existingClassIndex] = classInfo;
                             } else {
-                                // Add new class
                                 updatedClasses.push(classInfo);
                             }
-
-                            // 2. Merge Students (Replace students for this class with imported ones)
-                            // Filter out OLD students of this class
                             const otherStudents = state.students.filter(s => s.classId !== classInfo.id);
-                            // Combine other students with NEW imported students
                             const updatedStudents = [...otherStudents, ...newClassStudents];
 
-                            setState(prev => ({
-                                ...prev,
+                            const newState = {
+                                ...state,
                                 classes: updatedClasses,
                                 students: updatedStudents,
-                                activeClassId: classInfo.id // Switch to imported class
-                            }));
-
+                                activeClassId: classInfo.id 
+                            };
+                            setState(newState);
+                            SnapshotManager.add(newState); // Create snapshot before potential errors
                             alert(`成功同步班级: ${classInfo.name}`);
 
                         } else {
-                            // Full Backup Restore
                             if (!confirm("这是全量备份文件。导入将【覆盖】当前所有数据！\n确定要继续吗？")) {
                                 e.target.value = null;
                                 return;
                             }
-                            // Basic validation
                             if(!importedData.classes || !importedData.students) throw new Error("Invalid format");
                             setState(importedData);
+                            SnapshotManager.add(importedData);
                             alert("完整数据恢复成功！");
                         }
-
                     } catch(err) {
                         alert("恢复失败，文件格式不正确");
                         console.error(err);
@@ -878,15 +1220,18 @@
 
             return (
                 <Layout 
-                    currentView={view} setView={setView} onExport={exportDataJSON} onImport={importDataJSON}
+                    currentView={view} setView={setView} 
+                    onExport={exportDataJSON} // Kept as fallback in sidebar, but DataCenter is main
                     classes={state.classes} activeClassId={state.activeClassId} 
                     setActiveClassId={id => setState(p => ({...p, activeClassId: id}))}
                 >
                     {view === ViewState.DASHBOARD && <Dashboard state={state} setView={setView} activeClass={activeClass} />}
+                    {view === ViewState.DATA && <DataCenter state={state} setState={setState} activeClassId={state.activeClassId} />}
                     {view === ViewState.STUDENTS && <StudentManager allStudents={state.students} setStudents={s => setState(p => ({...p, students: s}))} classes={state.classes} setClasses={c => setState(p => ({...p, classes: c}))} activeClassId={state.activeClassId} setActiveClassId={id => setState(p => ({...p, activeClassId: id}))} />}
                     {view === ViewState.QUESTIONS && <QuestionManager questions={state.questions} setQuestions={q => setState(p => ({...p, questions: q}))} />}
                     {view === ViewState.SESSION && <SessionMode students={state.students.filter(s => s.classId === state.activeClassId)} questions={state.questions} onUpdateStudent={u => setState(p => ({...p, students: p.students.map(s => s.id === u.id ? u : s)}))} activeClass={activeClass} />}
                     {view === ViewState.STATS && <Statistics students={state.students.filter(s => s.classId === state.activeClassId)} activeClass={activeClass} />}
+                    {view === ViewState.TOOLS && <UtilityToolkit students={state.students.filter(s => s.classId === state.activeClassId)} activeClass={activeClass} />}
                 </Layout>
             );
         };
